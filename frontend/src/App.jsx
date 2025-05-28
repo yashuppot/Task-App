@@ -2,10 +2,16 @@ import { useEffect, useState } from "react";
 
 import TaskSidebar from "./components/TaskSidebar";
 import NoTaskSelected from "./components/NoTaskSelected";
+import AddTask from "./components/AddTask";
 
 function App() {
-  const [selectedTaskId] = useState(null);
+  const [selectedTaskId, setSelectedTaskId] = useState(null);
   const [tasks, setTasks] = useState([]);
+
+
+  function handleStartAddTask() {
+    setSelectedTaskId(undefined);
+  }
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -24,11 +30,14 @@ function App() {
 
   let content;
   if (selectedTaskId === null) {
-    content = <NoTaskSelected />
+    content = <NoTaskSelected onStartAddTask={handleStartAddTask}/>
+  }
+  else if(selectedTaskId === undefined) {
+    content = <AddTask />
   }
   return (
     <div className="flex">
-      <TaskSidebar tasks={tasks} />
+      <TaskSidebar onStartAddTask={handleStartAddTask} tasks={tasks} />
       {content}
     </div>
 
