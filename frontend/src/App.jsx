@@ -31,6 +31,24 @@ function App() {
     setIsEditing(false);
   }
 
+  async function handleStatusChange(taskId, newStatus) {
+    try {
+      const res = await fetch(`http://localhost:5000/tasks/${taskId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (!res.ok) throw new Error("Failed to update status");
+
+      const updatedTask = await res.json();
+      setTasks((prev) => prev.map((t) => (t._id === taskId ? updatedTask : t)));
+    } catch (err) {
+      console.error("Error updating status:", err);
+      alert("Could not update status");
+    }
+  }
+
   async function handleSaveTaskEdits(taskId, updatedData) {
     try {
       const res = await fetch(`http://localhost:5000/tasks/${taskId}`, {
@@ -98,7 +116,7 @@ function App() {
       alert("Something went wrong while deleting the task.");
     }
   }
-  
+
   // Load all tasks on component mount via API call
   useEffect(() => {
     const fetchTasks = async () => {
@@ -115,7 +133,7 @@ function App() {
   }, []);
 
   let content; // Conditional content based on the editing state and selected task
-  
+
   if (selectedTaskId === null) {
     content = <NoTaskSelected onStartAddTask={handleStartAddTask} />;
   } else if (selectedTaskId === undefined) {
@@ -137,6 +155,7 @@ function App() {
           task={selectedTask}
           onDelete={() => handleDeleteTask(selectedTaskId)}
           onEdit={handleStartEditTask}
+          onStatusChange={handleStatusChange}
         />
       );
     }

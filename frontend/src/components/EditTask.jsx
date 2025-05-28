@@ -11,7 +11,7 @@ function EditTask({ task, onCancel, onSave }) {
     const updatedDesc = description.current.value;
 
     if (!updatedTitle.trim()) {
-      setError("All fields required.");
+      setError("Title is required, please fill it in");
       return;
     }
 
