@@ -16,7 +16,6 @@ function App() {
   }
 
   function handleSelectTask(taskId) {
-    console.log(taskId);
     setSelectedTaskId(taskId);
   }
 
@@ -103,7 +102,6 @@ function App() {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        console.log("tried");
         const response = await fetch("http://localhost:5000/tasks");
         const data = await response.json();
         setTasks(data);
