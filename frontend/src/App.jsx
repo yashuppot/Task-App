@@ -22,6 +22,30 @@ function App() {
     setSelectedTaskId(null);
   }
 
+  async function handleAddTask(taskData) {
+    try {
+      const res = await fetch("http://localhost:5000/tasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(taskData),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to create task");
+      }
+
+      const createdTask = await res.json();
+
+      setTasks((prev) => [...prev, createdTask]);
+      setSelectedTaskId(createdTask._id); // show new task immediately
+    } catch (error) {
+      console.error("Error adding task:", error);
+      alert("Failed to create task. Please try again.");
+    }
+  }
+
   async function handleDeleteTask(taskId) {
     const confirm = window.confirm(
       "Are you sure you want to delete this task?"
@@ -65,11 +89,16 @@ function App() {
   if (selectedTaskId === null) {
     content = <NoTaskSelected onStartAddTask={handleStartAddTask} />;
   } else if (selectedTaskId === undefined) {
-    content = <AddTask onCancel={handleCancelAddTask} />;
+    content = <AddTask onAdd={handleAddTask} onCancel={handleCancelAddTask} />;
   } else {
     console.log(selectedTaskId);
     let selectedTask = tasks.find((task) => task._id === selectedTaskId);
-    content = <SelectedTask onDelete={() => handleDeleteTask(selectedTaskId)} task={selectedTask} />;
+    content = (
+      <SelectedTask
+        onDelete={() => handleDeleteTask(selectedTaskId)}
+        task={selectedTask}
+      />
+    );
   }
   return (
     <div className="flex">

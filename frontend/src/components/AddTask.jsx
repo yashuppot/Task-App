@@ -10,14 +10,11 @@ function NewTask({ onAdd, onCancel }) {
   function handleSave() {
     const enteredTitle = title.current.value;
     const enteredDescription = description.current.value;
-    const enteredDueDate = dueDate.current.value;
 
     if (
-      enteredTitle.trim() === "" ||
-      enteredDescription.trim() === "" ||
-      enteredDueDate.trim() === ""
+      enteredTitle.trim() === ""
     ) {
-      setErrorMessage("All fields are required. Please fill them in.");
+      setErrorMessage("Title is required, please fill it in");
       return;
     }
 
