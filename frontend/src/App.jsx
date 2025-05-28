@@ -4,8 +4,10 @@ import TaskSidebar from "./components/TaskSidebar";
 import NoTaskSelected from "./components/NoTaskSelected";
 import AddTask from "./components/AddTask";
 import SelectedTask from "./components/SelectedTask";
+import EditTask from "./components/EditTask";
 
 function App() {
+  const [isEditing, setIsEditing] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
   const [tasks, setTasks] = useState([]);
 
@@ -20,6 +22,34 @@ function App() {
 
   function handleCancelAddTask() {
     setSelectedTaskId(null);
+  }
+
+  function handleStartEditTask() {
+    setIsEditing(true);
+  }
+
+  function handleFinishEditTask() {
+    setIsEditing(false);
+  }
+
+  async function handleSaveTaskEdits(taskId, updatedData) {
+    try {
+      const res = await fetch(`http://localhost:5000/tasks/${taskId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedData),
+      });
+
+      if (!res.ok) throw new Error("Failed to update task");
+
+      const updatedTask = await res.json();
+      setTasks((prev) => prev.map((t) => (t._id === taskId ? updatedTask : t)));
+
+      setIsEditing(false);
+    } catch (error) {
+      alert("Failed to save edits.");
+      console.error(error);
+    }
   }
 
   async function handleAddTask(taskData) {
@@ -91,14 +121,25 @@ function App() {
   } else if (selectedTaskId === undefined) {
     content = <AddTask onAdd={handleAddTask} onCancel={handleCancelAddTask} />;
   } else {
-    console.log(selectedTaskId);
     let selectedTask = tasks.find((task) => task._id === selectedTaskId);
-    content = (
-      <SelectedTask
-        onDelete={() => handleDeleteTask(selectedTaskId)}
-        task={selectedTask}
-      />
-    );
+
+    if (isEditing) {
+      content = (
+        <EditTask
+          task={selectedTask}
+          onCancel={handleFinishEditTask}
+          onSave={handleSaveTaskEdits}
+        />
+      );
+    } else {
+      content = (
+        <SelectedTask
+          task={selectedTask}
+          onDelete={() => handleDeleteTask(selectedTaskId)}
+          onEdit={handleStartEditTask}
+        />
+      );
+    }
   }
   return (
     <div className="flex">

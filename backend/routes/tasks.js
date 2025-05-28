@@ -33,11 +33,21 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
-    console.log(req.body);
-  } catch (err) {}
+    const { title, description, status } = req.body;
+    const task = await Task.findByIdAndUpdate(
+      req.params.id,
+      { title, description, status },
+      { new: true, runValidators: true }
+    );
+    if (!task) return res.status(404).json({ message: 'Task not found' });
+    res.json(task);
+  } catch (err) {
+    res.status(400).json({ message: 'Failed to update task', error: err.message });
+  }
 });
+
 
 router.delete("/:id", async (req, res) => {
   try {
