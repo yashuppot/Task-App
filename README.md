@@ -15,7 +15,7 @@ A simple task management application built with the **MERN** stack. This app all
 
 ## 🚀 App Demo
 
-[![thumbnail](https://img.youtube.com/vi/R1bbB9pSKhM/0.jpg)](https://www.youtube.com/watch?v=R1bbB9pSKhM)
+[![thumbnail](https://img.youtube.com/vi/SJjowMdjVL4/0.jpg)](https://www.youtube.com/watch?v=SJjowMdjVL4)
 
 ---
 
@@ -109,8 +109,3 @@ The frontend will run on:
 - **Database**: MongoDB (Atlas or local)
 
 ---
-
-## 📬 Contact
-
-Feel free to reach out if you'd like to discuss the project or code further.  
-Built with care by Yash.
