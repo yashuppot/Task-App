@@ -98,7 +98,8 @@ function App() {
       alert("Something went wrong while deleting the task.");
     }
   }
-
+  
+  // Load all tasks on component mount via API call
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -113,7 +114,8 @@ function App() {
     fetchTasks();
   }, []);
 
-  let content;
+  let content; // Conditional content based on the editing state and selected task
+  
   if (selectedTaskId === null) {
     content = <NoTaskSelected onStartAddTask={handleStartAddTask} />;
   } else if (selectedTaskId === undefined) {

@@ -10,7 +10,7 @@ function EditTask({ task, onCancel, onSave }) {
     const updatedTitle = title.current.value;
     const updatedDesc = description.current.value;
 
-    if (!updatedTitle.trim() || !updatedDesc.trim()) {
+    if (!updatedTitle.trim()) {
       setError("All fields required.");
       return;
     }
