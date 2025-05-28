@@ -17,8 +17,8 @@ function TaskSidebar({onStartAddTask, onSelectTask, selectedTaskId, tasks}) {
         {tasks.map((task) => {
             let cssClasses = "w-full text-left px-2 py-1 rounded-sm my-1 hover:text-stone-200 hover:bg-stone-800";
             return (
-            <li key={task.__id}>
-                <button onClick={() => onSelectTask(task.__id)} className={cssClasses}>
+            <li key={task._id}>
+                <button onClick={() => onSelectTask(task._id)} className={cssClasses}>
                     {task.title}
                 </button>
             </li>
