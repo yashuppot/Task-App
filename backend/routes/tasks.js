@@ -13,7 +13,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-
 router.get("/", async (req, res) => {
  try {
     const tasks = await Task.find().sort({ createdAt: -1 });
@@ -46,13 +45,6 @@ router.put('/:id', async (req, res) => {
   } catch (err) {
     res.status(400).json({ message: 'Failed to update task', error: err.message });
   }
-});
-
-
-router.delete("/:id", async (req, res) => {
-  try {
-    console.log(req.body);
-  } catch (err) {}
 });
 
 module.exports = router;
