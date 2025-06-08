@@ -47,6 +47,7 @@ export interface ButtonProps {
   onClick?: () => void;
   className?: string;
   type?: 'button' | 'submit' | 'reset';
+  [key: string]: any;
 }
 
 export interface InputProps {
