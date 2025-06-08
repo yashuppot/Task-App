@@ -1,8 +1,8 @@
 import React from "react";
-
+import { NoTaskSelectedProps } from "../types";
 import Button from "./Button";
 
-function NoTaskSelected({ onStartAddTask }) {
+function NoTaskSelected({ onStartAddTask }: NoTaskSelectedProps) {
   return (
     <div className="mt-24 text-center flex justify-center w-screen">
       <div>
@@ -20,4 +20,4 @@ function NoTaskSelected({ onStartAddTask }) {
   );
 }
 
-export default NoTaskSelected;
+export default NoTaskSelected; 

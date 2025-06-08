@@ -1,19 +1,18 @@
 import React, { useRef, useState } from "react";
+import { AddTaskProps } from "../types";
 import Input from "./Input";
 
-function NewTask({ onAdd, onCancel }) {
-  const title = useRef();
-  const description = useRef();
+function AddTask({ onAdd, onCancel }: AddTaskProps) {
+  const title = useRef<HTMLInputElement>(null);
+  const description = useRef<HTMLTextAreaElement>(null);
 
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  function handleSave() {
-    const enteredTitle = title.current.value;
-    const enteredDescription = description.current.value;
+  function handleSave(): void {
+    const enteredTitle = title.current?.value || "";
+    const enteredDescription = description.current?.value || "";
 
-    if (
-      enteredTitle.trim() === ""
-    ) {
+    if (enteredTitle.trim() === "") {
       setErrorMessage("Title is required, please fill it in");
       return;
     }
@@ -22,6 +21,8 @@ function NewTask({ onAdd, onCancel }) {
     onAdd({
       title: enteredTitle,
       description: enteredDescription,
+      dueDate: new Date().toISOString().split('T')[0], // default to today
+      status: 'pending'
     });
   }
 
@@ -53,11 +54,9 @@ function NewTask({ onAdd, onCancel }) {
       <div>
         <Input type="text" ref={title} label="Project Name" />
         <Input ref={description} label="Description" textarea />
-
       </div>
     </div>
   );
 }
 
-export default NewTask;
-
+export default AddTask; 

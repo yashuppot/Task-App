@@ -1,37 +1,38 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import TaskSidebar from "./components/TaskSidebar";
 import NoTaskSelected from "./components/NoTaskSelected";
 import AddTask from "./components/AddTask";
 import SelectedTask from "./components/SelectedTask";
 import EditTask from "./components/EditTask";
+import { Task, TaskData } from "./types";
 
 function App() {
-  const [isEditing, setIsEditing] = useState(false);
-  const [selectedTaskId, setSelectedTaskId] = useState(null);
-  const [tasks, setTasks] = useState([]);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null | undefined>(null);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
-  function handleStartAddTask() {
+  function handleStartAddTask(): void {
     setSelectedTaskId(undefined);
   }
 
-  function handleSelectTask(taskId) {
+  function handleSelectTask(taskId: string): void {
     setSelectedTaskId(taskId);
   }
 
-  function handleCancelAddTask() {
+  function handleCancelAddTask(): void {
     setSelectedTaskId(null);
   }
 
-  function handleStartEditTask() {
+  function handleStartEditTask(): void {
     setIsEditing(true);
   }
 
-  function handleFinishEditTask() {
+  function handleFinishEditTask(): void {
     setIsEditing(false);
   }
 
-  async function handleStatusChange(taskId, newStatus) {
+  async function handleStatusChange(taskId: string, newStatus: Task['status']): Promise<void> {
     try {
       const res = await fetch(`http://localhost:5000/tasks/${taskId}`, {
         method: "PUT",
@@ -41,7 +42,7 @@ function App() {
 
       if (!res.ok) throw new Error("Failed to update status");
 
-      const updatedTask = await res.json();
+      const updatedTask: Task = await res.json();
       setTasks((prev) => prev.map((t) => (t._id === taskId ? updatedTask : t)));
     } catch (err) {
       console.error("Error updating status:", err);
@@ -49,7 +50,7 @@ function App() {
     }
   }
 
-  async function handleSaveTaskEdits(taskId, updatedData) {
+  async function handleSaveTaskEdits(taskId: string, updatedData: Partial<TaskData>): Promise<void> {
     try {
       const res = await fetch(`http://localhost:5000/tasks/${taskId}`, {
         method: "PUT",
@@ -59,7 +60,7 @@ function App() {
 
       if (!res.ok) throw new Error("Failed to update task");
 
-      const updatedTask = await res.json();
+      const updatedTask: Task = await res.json();
       setTasks((prev) => prev.map((t) => (t._id === taskId ? updatedTask : t)));
 
       setIsEditing(false);
@@ -69,7 +70,7 @@ function App() {
     }
   }
 
-  async function handleAddTask(taskData) {
+  async function handleAddTask(taskData: TaskData): Promise<void> {
     try {
       const res = await fetch("http://localhost:5000/tasks", {
         method: "POST",
@@ -83,7 +84,7 @@ function App() {
         throw new Error("Failed to create task");
       }
 
-      const createdTask = await res.json();
+      const createdTask: Task = await res.json();
 
       setTasks((prev) => [...prev, createdTask]);
       setSelectedTaskId(createdTask._id); // show new task immediately
@@ -93,7 +94,7 @@ function App() {
     }
   }
 
-  async function handleDeleteTask(taskId) {
+  async function handleDeleteTask(taskId: string): Promise<void> {
     const confirm = window.confirm(
       "Are you sure you want to delete this task?"
     );
@@ -119,10 +120,10 @@ function App() {
 
   // Load all tasks on component mount via API call
   useEffect(() => {
-    const fetchTasks = async () => {
+    const fetchTasks = async (): Promise<void> => {
       try {
         const response = await fetch("http://localhost:5000/tasks");
-        const data = await response.json();
+        const data: Task[] = await response.json();
         setTasks(data);
       } catch (error) {
         console.error("Error fetching tasks:", error);
@@ -132,7 +133,7 @@ function App() {
     fetchTasks();
   }, []);
 
-  let content; // Conditional content based on the editing state and selected task
+  let content: React.JSX.Element; // Conditional content based on the editing state and selected task
 
   if (selectedTaskId === null) {
     content = <NoTaskSelected onStartAddTask={handleStartAddTask} />;
@@ -141,7 +142,7 @@ function App() {
   } else {
     let selectedTask = tasks.find((task) => task._id === selectedTaskId);
 
-    if (isEditing) {
+    if (isEditing && selectedTask) {
       content = (
         <EditTask
           task={selectedTask}
@@ -149,7 +150,7 @@ function App() {
           onSave={handleSaveTaskEdits}
         />
       );
-    } else {
+    } else if (selectedTask) {
       content = (
         <SelectedTask
           task={selectedTask}
@@ -158,8 +159,12 @@ function App() {
           onStatusChange={handleStatusChange}
         />
       );
+    } else {
+      // Fallback if task not found
+      content = <NoTaskSelected onStartAddTask={handleStartAddTask} />;
     }
   }
+  
   return (
     <div className="flex">
       <TaskSidebar
@@ -172,4 +177,4 @@ function App() {
   );
 }
 
-export default App;
+export default App; 

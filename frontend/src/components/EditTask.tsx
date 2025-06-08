@@ -1,14 +1,15 @@
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
+import { EditTaskProps } from "../types";
 import Input from "./Input";
 
-function EditTask({ task, onCancel, onSave }) {
-  const title = useRef();
-  const description = useRef();
-  const [error, setError] = useState(null);
+function EditTask({ task, onCancel, onSave }: EditTaskProps) {
+  const title = useRef<HTMLInputElement>(null);
+  const description = useRef<HTMLTextAreaElement>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleSubmit() {
-    const updatedTitle = title.current.value;
-    const updatedDesc = description.current.value;
+  function handleSubmit(): void {
+    const updatedTitle = title.current?.value || "";
+    const updatedDesc = description.current?.value || "";
 
     if (!updatedTitle.trim()) {
       setError("Title is required, please fill it in");
@@ -52,4 +53,4 @@ function EditTask({ task, onCancel, onSave }) {
   );
 }
 
-export default EditTask;
+export default EditTask; 

@@ -1,14 +1,15 @@
 import React from "react";
+import { SelectedTaskProps } from "../types";
 
-function SelectedTask({ task, onDelete, onEdit, onStatusChange }) {
-  const formattedDate = new Date(task.createdAt).toLocaleDateString("en-US", {
+function SelectedTask({ task, onDelete, onEdit, onStatusChange }: SelectedTaskProps) {
+  const formattedDate = new Date(task.dueDate).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
 
-  function handleStatusChange(e) {
-    onStatusChange(task._id, e.target.value);
+  function handleStatusChange(e: React.ChangeEvent<HTMLSelectElement>): void {
+    onStatusChange(task._id, e.target.value as 'pending' | 'in-progress' | 'completed');
   }
 
   return (
@@ -46,13 +47,13 @@ function SelectedTask({ task, onDelete, onEdit, onStatusChange }) {
           onChange={handleStatusChange}
           className="border mt-2 mb-4 h-10 rounded p-2 bg-stone-100 text-stone-800"
         >
-          <option value="To Do">To Do</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Done">Done</option>
+          <option value="pending">Pending</option>
+          <option value="in-progress">In Progress</option>
+          <option value="completed">Completed</option>
         </select>
       </header>
     </div>
   );
 }
 
-export default SelectedTask;
+export default SelectedTask; 
