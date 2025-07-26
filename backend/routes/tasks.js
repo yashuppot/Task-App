@@ -4,8 +4,8 @@ const Task = require("../models/Task");
 
 router.post('/', async (req, res) => {
   try {
-    const { title, description, status } = req.body;
-    const task = new Task({ title, description, status });
+    const { title, description, dueDate, status } = req.body;
+    const task = new Task({ title, description, dueDate, status });
     await task.save();
     res.status(201).json(task);
   } catch (err) {
@@ -34,10 +34,10 @@ router.delete('/:id', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   try {
-    const { title, description, status } = req.body;
+    const { title, description, dueDate, status } = req.body;
     const task = await Task.findByIdAndUpdate(
       req.params.id,
-      { title, description, status },
+      { title, description, dueDate, status },
       { new: true, runValidators: true }
     );
     if (!task) return res.status(404).json({ message: 'Task not found' });
